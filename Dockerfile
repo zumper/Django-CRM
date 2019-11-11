@@ -1,9 +1,9 @@
 FROM python:3.6
 
-WORKDIR /app
+WORKDIR /z_crm
 
 # Intall dependencies
-COPY . /app/
+COPY . /z_crm/
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
   apt update && \
@@ -14,6 +14,6 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
   pip install --no-cache-dir -r requirements.txt && \
   pip install --no-cache-dir redis
 
-RUN chmod +x /app/entrypoint.sh \
-  /app/wait-for-postgres.sh
-ENTRYPOINT ["/app/entrypoint.sh"]
+RUN chmod +x /z_crm/entrypoint.sh \
+  /z_crm/wait-for-postgres.sh
+ENTRYPOINT ["/z_crm/entrypoint.sh"]
