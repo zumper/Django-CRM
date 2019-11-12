@@ -38,7 +38,7 @@ def send_email_to_new_user(user_email, created_by, domain='demo.django-crm.io', 
                                 context['uid'][0], context['token'], activation_key))
     recipients = []
     recipients.append(user_email)
-    subject = 'Welcome to Django CRM'
+    subject = 'Welcome to Zumper CRM'
     html_content = render_to_string('user_status_in.html', context=context)
     if recipients:
       msg = EmailMessage(
@@ -203,7 +203,7 @@ def resend_activation_link_to_user(user_email="", domain='demo.django-crm.io', p
                                 context['uid'][0], context['token'], activation_key))
     recipients = []
     recipients.append(user_email)
-    subject = 'Welcome to Django CRM'
+    subject = 'Welcome to Zumper CRM'
     html_content = render_to_string('user_status_in.html', context=context)
     if recipients:
       msg = EmailMessage(
