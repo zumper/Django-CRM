@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from common.enums import Features, InternalFeatures, PropertyStatus, Syndications
 from common.models import Address, User
 from accounts.models import Account
+from deals.models import Deal
 from phonenumber_field.modelfields import PhoneNumberField
 from teams.models import Teams
 
@@ -17,6 +18,7 @@ class Building(models.Model):
 
   account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='buildings', null=True)
   address = models.ForeignKey(Address, related_name='buildings', on_delete=models.SET_NULL, null=True)
+  deals = models.ForeignKey(Deal, on_delete=models.SET_NULL, related_name='buildings', null=True)
   teams = models.ManyToManyField(Teams, related_name='buildings')
 
   active_on = models.DateTimeField(blank=True, null=True)

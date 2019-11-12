@@ -9,6 +9,7 @@ from buildings.models import Building
 from common.enums import Features, InternalFeatures, PropertyStatus, Syndications
 from common.models import Address, User
 from accounts.models import Account
+from deals.models import Deal
 from phonenumber_field.modelfields import PhoneNumberField
 from teams.models import Teams
 
@@ -19,6 +20,7 @@ class Listing(models.Model):
   account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='listings', null=True)
   address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name='listings', null=True)
   building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='listings', null=True)
+  deals = models.ForeignKey(Deal, on_delete=models.SET_NULL, related_name='listings', null=True)
   teams = models.ManyToManyField(Teams, related_name='listings')
 
   created_on = models.DateTimeField(auto_now_add=True)
