@@ -41,7 +41,7 @@ class Opportunity(models.Model):
   created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
   is_active = models.BooleanField(default=False)
   tags = models.ManyToManyField(Tags, blank=True)
-  teams = models.ManyToManyField(Teams, related_name='oppurtunity_teams')
+  teams = models.ManyToManyField(Teams, related_name='opportunity_teams')
 
   class Meta:
     ordering = ['-created_on']

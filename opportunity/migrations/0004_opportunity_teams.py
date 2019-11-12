@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
     migrations.AddField(
       model_name='opportunity',
       name='teams',
-      field=models.ManyToManyField(related_name='oppurtunity_teams', to='teams.Teams'),
+      field=models.ManyToManyField(related_name='opportunity_teams', to='teams.Teams'),
     ),
   ]

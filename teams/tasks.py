@@ -42,7 +42,7 @@ def update_team_users(team_id):
           lead.assigned_to.add(team_member)
 
     # for opportunities
-    opportunities = team.oppurtunity_teams.all()
+    opportunities = team.opportunity_teams.all()
     for opportunity in opportunities:
       opportunity_assigned_to_users = opportunity.assigned_to.all()
       for team_member in teams_members:
