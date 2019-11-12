@@ -48,6 +48,7 @@ STANDARD = [
 
 CUSTOM = [
   'buildings',
+  'deals',
   'interests',
   'lead_routes',
   'listings',

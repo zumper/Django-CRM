@@ -2,14 +2,12 @@
 # Author: Tetsuji Ono (tetsuji@zumper.com)
 #
 
-import arrow
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from buildings.models import Building
 from common.enums import Features, InternalFeatures, PropertyStatus, Syndications
 from common.models import Address, User
-from common.utils import CURRENCY_CODES
 from accounts.models import Account
 from phonenumber_field.modelfields import PhoneNumberField
 from teams.models import Teams
@@ -20,7 +18,7 @@ class Listing(models.Model):
 
   account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='listings', null=True)
   address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name='listings', null=True)
-  building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='buildings', null=True)
+  building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='listings', null=True)
   teams = models.ManyToManyField(Teams, related_name='listings')
 
   created_on = models.DateTimeField(auto_now_add=True)

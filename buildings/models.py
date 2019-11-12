@@ -2,13 +2,11 @@
 # Author: Tetsuji Ono (tetsuji@zumper.com)
 #
 
-import arrow
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from common.enums import Features, InternalFeatures, PropertyStatus, Syndications
 from common.models import Address, User
-from common.utils import CURRENCY_CODES
 from accounts.models import Account
 from phonenumber_field.modelfields import PhoneNumberField
 from teams.models import Teams
