@@ -5,15 +5,15 @@ import marketing.models
 
 
 class Migration(migrations.Migration):
+  dependencies = [
+    ('marketing', '0005_campaign_timezone'),
+  ]
 
-    dependencies = [
-        ('marketing', '0005_campaign_timezone'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='campaign',
-            name='attachment',
-            field=models.FileField(blank=True, max_length=1000, null=True, upload_to=marketing.models.get_campaign_attachment_path),
-        ),
-    ]
+  operations = [
+    migrations.AddField(
+      model_name='campaign',
+      name='attachment',
+      field=models.FileField(blank=True, max_length=1000, null=True,
+                             upload_to=marketing.models.get_campaign_attachment_path),
+    ),
+  ]

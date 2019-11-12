@@ -5,21 +5,22 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+  dependencies = [
+    ('tasks', '0002_task_created_by'),
+    ('common', '0012_apisettings_website'),
+  ]
 
-    dependencies = [
-        ('tasks', '0002_task_created_by'),
-        ('common', '0012_apisettings_website'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='attachments',
-            name='task',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tasks_attachment', to='tasks.Task'),
-        ),
-        migrations.AddField(
-            model_name='comment',
-            name='task',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tasks_comments', to='tasks.Task'),
-        ),
-    ]
+  operations = [
+    migrations.AddField(
+      model_name='attachments',
+      name='task',
+      field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                              related_name='tasks_attachment', to='tasks.Task'),
+    ),
+    migrations.AddField(
+      model_name='comment',
+      name='task',
+      field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                              related_name='tasks_comments', to='tasks.Task'),
+    ),
+  ]

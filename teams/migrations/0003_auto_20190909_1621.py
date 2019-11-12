@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+  dependencies = [
+    ('teams', '0002_auto_20190624_1250'),
+  ]
 
-    dependencies = [
-        ('teams', '0002_auto_20190624_1250'),
-    ]
-
-    operations = [
-        migrations.AlterModelOptions(
-            name='teams',
-            options={'ordering': ('id',)},
-        ),
-    ]
+  operations = [
+    migrations.AlterModelOptions(
+      name='teams',
+      options={'ordering': ('id',)},
+    ),
+  ]

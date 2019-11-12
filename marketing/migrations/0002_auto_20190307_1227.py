@@ -5,36 +5,35 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
+  dependencies = [
+    ('marketing', '0001_initial'),
+  ]
 
-    dependencies = [
-        ('marketing', '0001_initial'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='campaign',
-            name='updated_on',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
-            model_name='contact',
-            name='updated_on',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
-            model_name='contactlist',
-            name='updated_on',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
-            model_name='emailtemplate',
-            name='updated_on',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
-            model_name='tag',
-            name='created_on',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
-            preserve_default=False,
-        ),
-    ]
+  operations = [
+    migrations.AddField(
+      model_name='campaign',
+      name='updated_on',
+      field=models.DateTimeField(auto_now=True),
+    ),
+    migrations.AddField(
+      model_name='contact',
+      name='updated_on',
+      field=models.DateTimeField(auto_now=True),
+    ),
+    migrations.AddField(
+      model_name='contactlist',
+      name='updated_on',
+      field=models.DateTimeField(auto_now=True),
+    ),
+    migrations.AddField(
+      model_name='emailtemplate',
+      name='updated_on',
+      field=models.DateTimeField(auto_now=True),
+    ),
+    migrations.AddField(
+      model_name='tag',
+      name='created_on',
+      field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+      preserve_default=False,
+    ),
+  ]

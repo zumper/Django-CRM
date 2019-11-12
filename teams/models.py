@@ -6,23 +6,28 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Teams(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    users = models.ManyToManyField(User, related_name='user_teams')
-    created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
-    created_by = models.ForeignKey(
-        User, related_name='teams_created', blank=True, null=True, on_delete=models.SET_NULL)
+  created_by = models.ForeignKey(User, related_name='teams_created', on_delete=models.SET_NULL, blank=True, null=True)
+  fallback_team = models.ForeignKey('self',
+                                    on_delete=models.SET_NULL, related_name='fallback_teams', blank=True, null=True)
+  users = models.ManyToManyField(User, related_name='user_teams')
 
-    def __str__(self):
-        return self.name
+  created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
+  last_modified_on = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ('id',)
+  description = models.TextField()
+  name = models.CharField(max_length=128)
+  priority = models.DecimalField(default=0, max_digits=8, decimal_places=2)
 
-    @property
-    def created_on_arrow(self):
-        return arrow.get(self.created_on).humanize()
+  def __str__(self):
+    return self.name
 
-    def get_users(self):
-        return ','.join([str(_id) for _id in list(self.users.values_list('id', flat=True))])
-        # return ','.join(list(self.users.values_list('id', flat=True)))
+  class Meta:
+    ordering = ('id', 'priority',)
+
+  @property
+  def created_on_arrow(self):
+    return arrow.get(self.created_on).humanize()
+
+  def get_users(self):
+    return ','.join([str(_id) for _id in list(self.users.values_list('id', flat=True))])
+    # return ','.join(list(self.users.values_list('id', flat=True)))

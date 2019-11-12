@@ -4,16 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+  dependencies = [
+    ('teams', '0003_auto_20190909_1621'),
+    ('invoices', '0007_auto_20190909_1621'),
+  ]
 
-    dependencies = [
-        ('teams', '0003_auto_20190909_1621'),
-        ('invoices', '0007_auto_20190909_1621'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='invoice',
-            name='teams',
-            field=models.ManyToManyField(related_name='invoices_teams', to='teams.Teams'),
-        ),
-    ]
+  operations = [
+    migrations.AddField(
+      model_name='invoice',
+      name='teams',
+      field=models.ManyToManyField(related_name='invoices_teams', to='teams.Teams'),
+    ),
+  ]
