@@ -45,7 +45,7 @@ from django.core.cache import cache
 class InterestDetailView(SalesAccessRequiredMixin, LoginRequiredMixin, DetailView):
   model = Interest
   context_object_name = 'interest_record'
-  template_name = 'interests.html'
+  template_name = 'view_interests.html'
 
   def get_queryset(self):
     queryset = super(InterestDetailView, self).get_queryset()
@@ -144,3 +144,10 @@ class RemoveInterestView(SalesAccessRequiredMixin, LoginRequiredMixin, View):
       if self.request.is_ajax():
         return JsonResponse({'error': False})
       return redirect("interests:list")
+
+
+class GetInterestsView(LoginRequiredMixin, ListView):
+  model = Interest
+  context_object_name = "interests"
+  template_name = "interests_list.html"
+

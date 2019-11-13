@@ -70,11 +70,11 @@ class InterestApiView(BaseApiView):
     attached_lead = leads.get_lead_for_interest(new_interest, data['first_name'], data['last_name'])
 
     if attached_lead:
-      new_interest.lead_id = attached_lead.id
+      new_interest.lead = attached_lead
 
     new_interest.save()
 
-    return Response({'data': new_interest.id}, status=status.HTTP_201_CREATED)
+    return Response({'data': new_interest.pk}, status=status.HTTP_201_CREATED)
 
   @staticmethod
   def _exists(tracking_id):

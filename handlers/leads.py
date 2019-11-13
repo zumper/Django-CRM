@@ -32,7 +32,7 @@ def get_lead_for_interest(interest, first_name, last_name):
 
   assigned = User.objects.first()
 
-  new_lead = Lead.objects.create(
+  new_lead = Lead(
       title=_RENTER,
       first_name=first_name,
       last_name=last_name,
