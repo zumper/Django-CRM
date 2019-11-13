@@ -28,4 +28,3 @@ django-haystack==2.8.0
 elasticsearch==2.3
 python-memcached==1.59
 boto
-djangorestframework

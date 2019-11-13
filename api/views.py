@@ -5,6 +5,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from six import string_types
 
 import json
 
@@ -25,16 +26,17 @@ class BaseApiView(APIView):
   def _validate_body(self, body):
     missing = list()
     for required in self._REQUIRED:
-      if isinstance(required, str) and body.get(required) is None:
-        missing.append(required)
-      elif all(body.get(sub_require) is None for sub_require in required):
+      if isinstance(required, (tuple, list, set, frozenset)):
+        if all(body.get(sub_require) is None for sub_require in required):
+          missing.append(required)
+      elif body.get(required) is None:
         missing.append(required)
     if missing:
       raise ApiException('missing required fields', status_code=status.HTTP_400_BAD_REQUEST, missing=missing)
 
 class InterestApiView(BaseApiView):
 
-  _REQUIRED = frozenset(('first_name', 'last_name', 'tracking_id', 'min_price', 'clazz', ('email', 'phone'),))
+  _REQUIRED = frozenset(('first_name', 'last_name', 'tracking_id', 'min_price', 'clazz', ('email', 'phone',),))
 
   def post(self, request, *args, **kwargs):
     data = self._get_body(request)
@@ -66,9 +68,13 @@ class InterestApiView(BaseApiView):
     )
 
     attached_lead = leads.get_lead_for_interest(new_interest, data['first_name'], data['last_name'])
-    new_interest.lead = attached_lead
 
-    return Response({'data': new_interest}, status=status.HTTP_201_CREATED)
+    if attached_lead:
+      new_interest.lead_id = attached_lead.id
+
+    new_interest.save()
+
+    return Response({'data': new_interest.id}, status=status.HTTP_201_CREATED)
 
   @staticmethod
   def _exists(tracking_id):

@@ -45,11 +45,11 @@ class Interest(models.Model):
   budget = models.DecimalField(blank=True, null=True, max_digits=8, decimal_places=2)
   clazz = models.CharField(_('Clazz'), blank=True, null=True, max_length=256)
   email = models.EmailField(max_length=256, null=True, blank=True)
-  features = models.BigIntegerField(choices=Features.choices(), blank=True)
+  features = models.BigIntegerField(choices=Features.choices(), blank=True, null=True)
   message = models.TextField(null=True)
   move_in_date = models.DateField(blank=True, null=True)
   origin = models.TextField(blank=True, null=True)
-  phone = PhoneNumberField(null=True, blank=True)
+  phone = PhoneNumberField(blank=True, null=True)
 
 
   class Meta:
