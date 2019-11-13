@@ -21,6 +21,11 @@ urlpatterns = [
   path('events/', include('events.urls', namespace="events")),
   path('teams/', include('teams.urls', namespace="teams")),
   path('emails/', include('emails.urls', namespace="emails")),
+  path('interests/', include('interests.urls', namespace="deals")),
+  path('listings/', include('listings.urls', namespace="deals")),
+  path('buildings/', include('buildings.urls', namespace="deals")),
+  path('deals/', include('deals.urls', namespace="deals")),
+
   # path('planner/', include('planner.urls', namespace="planner")),
   path('logout/', views.LogoutView, {'next_page': '/login/'}, name="logout"),
 

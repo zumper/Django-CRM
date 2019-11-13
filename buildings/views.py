@@ -42,21 +42,21 @@ from teams.models import Teams
 from django.core.cache import cache
 
 
-class InterestDetailView(SalesAccessRequiredMixin, LoginRequiredMixin, DetailView):
+class BuildingDetailView(SalesAccessRequiredMixin, LoginRequiredMixin, DetailView):
   model = Interest
-  context_object_name = 'interest_record'
-  template_name = 'interests.html'
+  context_object_name = 'building_record'
+  template_name = 'buildings.html'
 
   def get_queryset(self):
-    queryset = super(InterestDetailView, self).get_queryset()
+    queryset = super(BuildingDetailView, self).get_queryset()
     queryset = queryset.prefetch_related('building', 'contact', 'lead', 'listing', 'opportunity', 'matching_team')
     return queryset
 
 
-class InterestsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateView):
+class BuildingsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateView):
   model = Interest
-  context_object_name = "interest_obj_list"
-  template_name = "interests.html"
+  context_object_name = "building_obj_list"
+  template_name = "buildings.html"
 
   def get_queryset(self):
     queryset = self.model.objects.all()
@@ -68,9 +68,6 @@ class InterestsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateVi
 
     request_post = self.request.POST
     if request_post:
-      if request_post.get('listing'):
-        queryset = queryset.filter(
-          listing__icontains=request_post.get('listing'))
       if request_post.get('building'):
         queryset = queryset.filter(
           building__city__icontains=request_post.get('building'))
@@ -83,12 +80,11 @@ class InterestsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateVi
     return queryset.distinct()
 
   def get_context_data(self, **kwargs):
-    context = super(InterestsListView, self).get_context_data(**kwargs)
-    context["interest_obj_list"] = self.get_queryset()
+    context = super(BuildingsListView, self).get_context_data(**kwargs)
+    context["building_obj_list"] = self.get_queryset()
     context["per_page"] = self.request.POST.get('per_page')
     search = False
     if (
-        self.request.POST.get('listing') or
         self.request.POST.get('phone') or
         self.request.POST.get('email') or
         self.request.POST.get('building')
@@ -102,30 +98,30 @@ class InterestsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateVi
     return self.render_to_response(context)
 
 
-class CreateInterestView(SalesAccessRequiredMixin, LoginRequiredMixin, CreateView):
+class CreateBuildingView(SalesAccessRequiredMixin, LoginRequiredMixin, CreateView):
     model = Interest
     form_class = InterestForm
     template_name = "create_interest.html"
 
     def get_context_data(self, **kwargs):
-      context = super(CreateInterestView, self).get_context_data(**kwargs)
+      context = super(CreateBuildingView, self).get_context_data(**kwargs)
       context["interest_form"] = context["form"]
       return context
 
 
-class UpdateInterestView(SalesAccessRequiredMixin, LoginRequiredMixin, UpdateView):
+class UpdateBuildingView(SalesAccessRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Interest
     form_class = InterestForm
     template_name = "create_interest.html"
 
     def get_context_data(self, **kwargs):
-      context = super(UpdateInterestView, self).get_context_data(**kwargs)
+      context = super(UpdateBuildingView, self).get_context_data(**kwargs)
       context["interest_obj"] = self.object
       context["interest_form"] = context["form"]
       return context
 
 
-class RemoveInterestView(SalesAccessRequiredMixin, LoginRequiredMixin, View):
+class RemoveBuildingView(SalesAccessRequiredMixin, LoginRequiredMixin, View):
 
   def get(self, request, *args, **kwargs):
     return self.post(request, *args, **kwargs)
@@ -143,4 +139,4 @@ class RemoveInterestView(SalesAccessRequiredMixin, LoginRequiredMixin, View):
       self.object.delete()
       if self.request.is_ajax():
         return JsonResponse({'error': False})
-      return redirect("interests:list")
+      return redirect("buildings:list")
