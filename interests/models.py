@@ -34,8 +34,8 @@ class Interest(models.Model):
 
   tracking_id = models.CharField(_('Tracking Id'), unique=True, null=True, max_length=256)
   agent_email = models.CharField(_('Agent Email'), null=True, blank=True, max_length=256)
-  brokerage_name = models.CharField(_('Brokerage Name'), null=True, blank=True, max_length=256)
   brokerage_key = models.CharField(_('Brokerage Key'), null=True, blank=True, max_length=256)
+  brokerage_name = models.CharField(_('Brokerage Name'), null=True, blank=True, max_length=256)
   min_price = models.DecimalField(blank=True, null=True, max_digits=8, decimal_places=2)
   max_price = models.DecimalField(blank=True, null=True, max_digits=8, decimal_places=2)
 
@@ -46,6 +46,11 @@ class Interest(models.Model):
   clazz = models.CharField(_('Clazz'), blank=True, null=True, max_length=256)
   email = models.EmailField(max_length=256, null=True, blank=True)
   features = models.BigIntegerField(choices=Features.choices(), blank=True)
+  message = models.TextField(null=True)
   move_in_date = models.DateField(blank=True, null=True)
   origin = models.TextField(blank=True, null=True)
   phone = PhoneNumberField(null=True, blank=True)
+
+
+  class Meta:
+    ordering = ['-created_on']

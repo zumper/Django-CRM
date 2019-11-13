@@ -25,6 +25,7 @@ STANDARD = [
   'django.contrib.messages',
   'django.contrib.sessions',
   'django.contrib.staticfiles',
+  'rest_framework',
   'simple_pagination',
   'compressor',
   'haystack',
@@ -47,6 +48,7 @@ STANDARD = [
 ]
 
 CUSTOM = [
+  'api',
   'buildings',
   'deals',
   'interests',
@@ -56,6 +58,13 @@ CUSTOM = [
 ]
 
 INSTALLED_APPS = STANDARD + CUSTOM
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
+}
 
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
