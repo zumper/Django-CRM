@@ -2,6 +2,7 @@ import re
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordResetForm
+from django_select2 import forms as select2_forms
 from common.models import Address, User, Document, Comment, APISettings
 from django.contrib.auth import password_validation
 from teams.models import Teams
@@ -305,3 +306,42 @@ class APISettingsForm(forms.ModelForm):
       raise forms.ValidationError(
         "Please provide a valid URL with schema and without trailing slash - Example: http://google.com")
     return website
+
+
+class BitsetSelectFormField(forms.MultipleChoiceField):
+  widget = select2_forms.Select2MultipleWidget
+
+  def __init__(self, *args, **kwargs):
+    self.null = kwargs.pop('null')
+    self.enum = kwargs.pop('enum')
+    super(BitsetSelectFormField, self).__init__(*args, **kwargs)
+
+  def validate(self, value):
+    if not value and self.required:
+      raise forms.ValidationError(self.error_messages['required'])
+
+  def has_changed(self, initial, data):
+    if self.disabled:
+      return False
+    return self.to_python(initial) != self.to_python(data)
+
+  def to_python(self, value):
+    """convert from ui value into db value"""
+    if value != 0 and not value:
+      return None if self.null else 0
+    try:
+      return self.enum.encode_bitmask([int(v) for v in value if v != '-1'])
+    except TypeError:
+      return value
+
+  def prepare_value(self, value):
+    """convert from db value to ui value"""
+    if value is None:
+      return None
+    if isinstance(value, list):
+      return value or None
+    if isinstance(value, str):
+      if not value:
+        return None
+      value = int(value)
+    return [str(x) for x in self.enum.decode_bitmask(value)] or ([u'-1'] if self.null else [])

@@ -5,6 +5,6 @@
 
 from django.contrib import admin
 
-from interests.models import Interest
+from interests.models import *
 
-admin.site.register(Interest)
+admin.site.register(Interest, InterestAdmin)

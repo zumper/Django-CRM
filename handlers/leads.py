@@ -23,7 +23,12 @@ def get_lead_for_interest(interest, first_name, last_name):
   if not query:
     return
 
-  lead = query.filter(is_active=True).prefetch_related('interests').first()
+  lead = None
+  try:
+    lead = query.filter(is_active=True).prefetch_related('interests').first()
+  except Exception:
+    pass
+
   if lead and lead.interests:
     most_recent_intent_dt = lead.interests[0].created_on
     date_diff = datetime.datetime.now().date() - most_recent_intent_dt
@@ -32,15 +37,14 @@ def get_lead_for_interest(interest, first_name, last_name):
 
   assigned = User.objects.first()
 
-  new_lead = Lead(
+  lead_obj = Lead(
       title=_RENTER,
       first_name=first_name,
       last_name=last_name,
       phone=interest.phone,
       status=None,
-      # TODO(tetsuji): we can't just assign to the first user...
   )
-  new_lead.assigned_to.add(assigned)
-  new_lead.save()
+  lead_obj.assigned_to.add(assigned)
+  lead_obj.save()
 
-  return new_lead
+  return lead_obj

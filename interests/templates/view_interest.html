@@ -2,7 +2,6 @@
 {% load staticfiles %}
 {% load thumbnail %}
 {% block breadcrumb %}
-
 {% block extralinks %}
 <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
 <style>
@@ -34,40 +33,55 @@
                 <div class="dropdown buttons_row" style="width:auto; display:inline-block; left:0">
                   <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
                     <span class="caret"></span></button>
-{#                  <ul class="dropdown-menu" style="width:fit-content; min-width:-webkit-fill-available; margin-top: 0;">#}
-{#                    <li><a href="{% url 'interests:edit_interest' interest_record.id %}"#}
-{#                        style="background:#17a2b8; color: white; font-weight: 600;">Edit</a></li>#}
-{#                  </ul>#}
+                  <ul class="dropdown-menu" style="width:fit-content; min-width:-webkit-fill-available; margin-top: 0;">
+                    <li><a href="{% url 'interests:edit_interest' interest_record.id %}"
+                        style="background:#17a2b8; color: white; font-weight: 600;">Edit</a></li>
+                  </ul>
                 </div>
               </span>
             </h5>
           </div>
+
           <div class="row marl">
             <div class="col-md-4">
+
               <div class="filter_col col-md-12" id="iname">
                 <div class="form-group">
                   <label class="interest_field_label" for="id_lead" data-name="lead">Lead</label>
                   {% if interest_record.lead %}
-                  <div class="interest_field" id="interest_lead" data-name="lead">{{ interest_record.lead }}</div>
+                  <div>
+                    <a href="{% url 'leads:view_lead' interest_record.lead_id %}">{{interest_record.lead}}</a>
+                  </div>
                   {% else %}
-                  <div class="interest_field">Not Specified</div>
+                  <div class="interest_field">
+                    Not Specified
+                  </div>
                   {% endif %}
+                </div>
               </div>
+            </div>
+
+            <div>
               <div class="filter_col col-md-12">
                 <div class="form-group">
                   <label class="interest_field_label" for="id_contact" data-name="contact">Contact</label>
                   {% if interest_record.contact %}
-                  <div class="interest_field" id="interest_contact" data-name="contact">{{ interest_record.contact }}</div>
+                  <div>
+                    <a href="{% url 'contacts:view_contact' interest_record.contact_id %}">{{interest_record.contact}}</a>
+                  </div>
                   {% else %}
                   <div class="interest_field">Not Specified</div>
                   {% endif %}
                 </div>
               </div>
+
               <div class="filter_col col-md-12">
                 <div class="form-group">
                   <label class="interest_field_label" for="id_opportunity" data-name="opportunity">Opportunity</label>
                   {% if interest_record.opportunity %}
-                  <div class="interest_field" id="interest_opportunity" data-name="opportunity">{{ interest_record.opportunity }}</div>
+                  <div>
+                    <a href="{% url 'opportunity:opp_view' interest_record.opportunity_id %}">{{interest_record.opportunity}}</a>
+                  </div>
                   {% else %}
                   <div class="interest_field">Not Specified</div>
                   {% endif %}
@@ -76,15 +90,15 @@
               <div class="filter_col col-md-12">
                 <div class="form-group">
                   <label class="interest_field_label" for="id_team" data-name="matching_team">Matching Team</label>
-                  {% if interest_record.interest_record.phone_raw_input %}
+                  {% if interest_record.interest_record.matching_team %}
                   <div class="interest_field" id="interest_team" data-name="matching_team">{{ interest_record.matching_team }}</div>
                   {% else %}
                   <div class="interest_field">Not specified</div>
                   {% endif %}
                 </div>
               </div>
-
             </div>
+
             <div class="col-md-4">
               <div class="filter_col col-md-12">
                 <div class="form-group">
@@ -127,8 +141,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
 
+            <div class="col-md-4">
               <div class="filter_col col-md-12">
                 <div class="form-group">
                   {% if interest_record.address_line or interest_record.street or interest_record.city or interest_record.state or interest_record.postcode or interest_record.country %}

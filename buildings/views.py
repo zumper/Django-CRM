@@ -1,7 +1,7 @@
 # Copyright 2019 Zumper Inc.
 # Author: Tetsuji Ono (tetsuji@zumper.com)
 #
-# views for interest model
+# views for building model
 
 import json
 
@@ -20,11 +20,14 @@ from django.views.generic import (CreateView, DetailView, ListView,
                                   TemplateView, View, UpdateView)
 
 from accounts.models import Account, Tags
+from buildings.forms import BuildingForm
+from buildings.models import Building
 from common import status
 from common.access_decorators_mixins import (MarketingAccessRequiredMixin,
                                              SalesAccessRequiredMixin,
                                              marketing_access_required,
                                              sales_access_required)
+from common.forms import BillingAddressForm
 from common.models import APISettings, Attachments, Comment, User
 from common.tasks import send_email_user_mentions
 from common.utils import COUNTRIES, LEAD_SOURCE, LEAD_STATUS
@@ -43,18 +46,18 @@ from django.core.cache import cache
 
 
 class BuildingDetailView(SalesAccessRequiredMixin, LoginRequiredMixin, DetailView):
-  model = Interest
+  model = Building
   context_object_name = 'building_record'
   template_name = 'buildings.html'
 
   def get_queryset(self):
     queryset = super(BuildingDetailView, self).get_queryset()
-    queryset = queryset.prefetch_related('building', 'contact', 'lead', 'listing', 'opportunity', 'matching_team')
+    queryset = queryset.prefetch_related('interests', 'listings',)
     return queryset
 
 
-class BuildingsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateView):
-  model = Interest
+class BuildingListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateView):
+  model = Building
   context_object_name = "building_obj_list"
   template_name = "buildings.html"
 
@@ -80,16 +83,15 @@ class BuildingsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateVi
     return queryset.distinct()
 
   def get_context_data(self, **kwargs):
-    context = super(BuildingsListView, self).get_context_data(**kwargs)
+    context = super(BuildingListView, self).get_context_data(**kwargs)
     context["building_obj_list"] = self.get_queryset()
     context["per_page"] = self.request.POST.get('per_page')
-    search = False
-    if (
+    search = True if (
         self.request.POST.get('phone') or
         self.request.POST.get('email') or
-        self.request.POST.get('building')
-    ):
-      search = True
+        self.request.POST.get('listing')
+    ) else False
+
     context["search"] = search
     return context
 
@@ -99,25 +101,60 @@ class BuildingsListView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateVi
 
 
 class CreateBuildingView(SalesAccessRequiredMixin, LoginRequiredMixin, CreateView):
-    model = Interest
-    form_class = InterestForm
-    template_name = "create_interest.html"
+    model = Building
+    form_class = BuildingForm
+    template_name = "create_building.html"
+
+    def post(self, request, *args, **kwargs):
+      self.object = None
+      form = self.get_form()
+      address_form = BillingAddressForm(request.POST)
+      if form.is_valid() and address_form.is_valid():
+        address_obj = address_form.save()
+        building_obj = form.save(commit=False)
+        building_obj.address = address_obj
+        building_obj.created_by = self.request.user
+        building_obj.save()
+        return self.form_valid(form)
+
+      return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
       context = super(CreateBuildingView, self).get_context_data(**kwargs)
-      context["interest_form"] = context["form"]
+      context["building_form"] = context["form"]
+      if "address_form" in kwargs:
+        context["address_form"] = kwargs["address_form"]
+      else:
+        if self.request.POST:
+          context["address_form"] = BillingAddressForm(self.request.POST)
+        else:
+          context["address_form"] = BillingAddressForm()
       return context
 
 
 class UpdateBuildingView(SalesAccessRequiredMixin, LoginRequiredMixin, UpdateView):
-    model = Interest
-    form_class = InterestForm
-    template_name = "create_interest.html"
+    model = Building
+    form_class = BuildingForm
+    template_name = "create_building.html"
+
+    def post(self, request, *args, **kwargs):
+      self.object = None
+      form = self.get_form()
+      address_form = BillingAddressForm(request.POST)
+      if form.is_valid() and address_form.is_valid():
+        address_obj = address_form.save()
+        building_obj = form.save(commit=False)
+        building_obj.address = address_obj
+        building_obj.created_by = self.request.user
+        building_obj.save()
+        return self.form_valid(form)
+
+      return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
       context = super(UpdateBuildingView, self).get_context_data(**kwargs)
-      context["interest_obj"] = self.object
-      context["interest_form"] = context["form"]
+      context["building_obj"] = self.object
+      context["building_form"] = context["form"]
       return context
 
 

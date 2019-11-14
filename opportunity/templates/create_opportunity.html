@@ -177,8 +177,10 @@
               <div class="filter_col col-12">
                 <div class="form-group">
                   <label>Tags</label>
-                  <div class="txt-box-div" id="tag-div"><input type="text" name="tags" id="tags_1"
-                      value="{% for t in opportunity_obj.tags.all %}{{t.name}}, {% endfor %}" class="tags" />
+                  <div class="txt-box-div" id="tag-div">
+                    <input type="text" name="tags" id="tags_1"
+                           value="{% for t in opportunity_obj.tags.all %}{{t.name}}, {% endfor %}" class="tags"
+                    />
                   </div>
                 </div>
               </div>

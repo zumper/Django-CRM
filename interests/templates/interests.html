@@ -30,6 +30,13 @@
               <div class="row marl">
                 <div class="filter_col col-md-3">
                   <div class="form-group">
+                    <label for="exampleInputEmail1">EMAIL</label>
+                    <input type="text" class="form-control" placeholder="Email" name="email"
+                      value="{{request.POST.email}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-3">
+                  <div class="form-group">
                     <label for="exampleInputEmail1">LISTING</label>
                     <input type="text" class="form-control" placeholder="Listing" name="listing"
                       value="{{request.POST.listing}}">
@@ -45,15 +52,8 @@
                 <div class="filter_col col-md-3">
                   <div class="form-group">
                     <label for="exampleInputEmail1">PHONE</label>
-                    <input type="text" class="form-control" placeholder="Building" name="building"
+                    <input type="text" class="form-control" placeholder="Phone" name="phone"
                       value="{{request.POST.phone}}">
-                  </div>
-                </div>
-                <div class="filter_col col-md-3">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">EMAIL</label>
-                    <input type="text" class="form-control" placeholder="Email" name="agent_email"
-                      value="{{request.POST.agent_email}}">
                   </div>
                 </div>
                 <div class="filter_col text-center col-3">
@@ -90,7 +90,8 @@
                 <tr>
                   <th width="5%">Interest ID</th>
                   <th width="20%">Email</th>
-                  <th width="20%">Listing</th>
+                  <th width="15%">Lead</th>
+                  <th width="15%">Listing</th>
                   <th width="15%">Building</th>
                   <th width="15%">Phone</th>
                   <th width="15%">Created On</th>
@@ -109,8 +110,15 @@
                     {{interest.id}}
                   </td>
                   <td>
-                    {% if interest.agent_email %}
-                    {{interest.agent_email}}
+                    {% if interest.email %}
+                    {{interest.email}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if interest.lead %}
+                    {{interest.lead}}
                     {% else %}
                     Not Specified
                     {% endif %}
@@ -137,12 +145,12 @@
                     {% endif %}
                   </td>
                   <td class="actions">
-                    <a href="{% url 'contacts:view_contact' contact.id %}" class="btn btn-info view" title="View" ><i
+                    <a href="{% url 'interests:view_interest' interest.id %}" class="btn btn-info view" title="View" ><i
                         class="fas fa-eye"></i></a>
                     <a href="{% url 'interests:edit_interest' interest.id%}" class="btn btn-success edit" title="Edit"><i
                         class="fas fa-pencil-alt"></i></a>
                     {% if request.user == interest.created_by or request.user.role == "ADMIN" or request.user.is_superuser %}
-                    <a href="{% url 'interests:remove_interest' contact.id %}"
+                    <a href="{% url 'interests:remove_interest' interest.id %}"
                       class="btn btn-danger delete remove_account" title="Delete" ><i class="fas fa-trash-alt"></i></a>
                     {% endif %}
                   </td>

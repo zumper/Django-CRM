@@ -3,6 +3,7 @@
 #
 
 import arrow
+from django.contrib import admin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -22,17 +23,17 @@ from teams.models import Teams
 class Interest(models.Model):
   """Model definition for Interest."""
 
-  building = models.ForeignKey(Building, on_delete=models.SET_NULL, related_name='interests', null=True)
-  contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, related_name='interests', null=True)
-  lead = models.ForeignKey(Lead, on_delete=models.SET_NULL, related_name='interests', null=True)
-  listing = models.ForeignKey(Listing, on_delete=models.SET_NULL, related_name='interests', null=True)
-  opportunity = models.ForeignKey(Opportunity, on_delete=models.SET_NULL, related_name='interests', null=True)
-  matching_team = models.ForeignKey(Teams, on_delete=models.SET_NULL, related_name='interests', null=True)
+  building = models.ForeignKey(Building, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
+  contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
+  lead = models.ForeignKey(Lead, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
+  listing = models.ForeignKey(Listing, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
+  opportunity = models.ForeignKey(Opportunity, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
+  matching_team = models.ForeignKey(Teams, on_delete=models.SET_NULL, related_name='interests', blank=True, null=True)
 
   created_on = models.DateTimeField(auto_now_add=True)
   last_modified_on = models.DateTimeField(auto_now=True)
 
-  tracking_id = models.CharField(_('Tracking Id'), unique=True, null=True, max_length=256)
+  tracking_id = models.CharField(_('Tracking Id'), unique=True, blank=True, null=True, max_length=256)
   agent_email = models.CharField(_('Agent Email'), null=True, blank=True, max_length=256)
   brokerage_key = models.CharField(_('Brokerage Key'), null=True, blank=True, max_length=256)
   brokerage_name = models.CharField(_('Brokerage Name'), null=True, blank=True, max_length=256)
@@ -46,7 +47,7 @@ class Interest(models.Model):
   clazz = models.CharField(_('Clazz'), blank=True, null=True, max_length=256)
   email = models.EmailField(max_length=256, null=True, blank=True)
   features = models.BigIntegerField(choices=Features.choices(), blank=True, null=True)
-  message = models.TextField(null=True)
+  message = models.TextField(blank=True, null=True)
   move_in_date = models.DateField(blank=True, null=True)
   origin = models.TextField(blank=True, null=True)
   phone = PhoneNumberField(blank=True, null=True)
@@ -54,3 +55,8 @@ class Interest(models.Model):
 
   class Meta:
     ordering = ['-created_on']
+
+
+class InterestAdmin(admin.ModelAdmin):
+  """Admin model def for Interest."""
+  search_fields = ('building', 'contact', 'lead', 'listing', 'opportunity',)

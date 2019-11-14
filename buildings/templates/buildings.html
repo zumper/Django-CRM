@@ -1,10 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends 'sales/base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label {
+    font-weight: 800;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline"><a class="primary_btn" href="{% url 'buildings:add_building'%}"><i class="fa fa-plus"></i>
+          Add New Building</a></span>
+    </div>
+  </div>
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <form id="buildings_filter" action="" method="POST">
+            <div class="card-body">
+              <div class="card-title">Filters</div>
+              <div class="row marl">
+                <div class="filter_col col-md-3">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">NAME</label>
+                    <input type="text" class="form-control" placeholder="Name" name="name"
+                      value="{{request.POST.building_name}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-3">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">ZUMPER_ID</label>
+                    <input type="text" class="form-control" placeholder="Zumper Id" name="zumper_id"
+                      value="{{request.POST.zumper_id}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-3">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">STATUS</label>
+                    <input type="text" class="form-control" placeholder="Building Status" name="building_statu"
+                      value="{{request.POST.building_status}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-3">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">AGENT_EMAIL</label>
+                    <input type="text" class="form-control" placeholder="Email" name="email"
+                      value="{{request.POST.email}}">
+                  </div>
+                </div>
+                <div class="filter_col text-center col-3">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'buildings:list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <!-- filter_row starts here -->
+  <div class="table_container_row row marl ">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title text-right">
 
-</body>
-</html>
+
+            <span class="filter_toggle">
+              <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+            </span>
+
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                {% if building_obj_list|length > 0 %}
+                <tr>
+                  <th width="10%">Building ID</th>
+                  <th width="15%">Zumper Id</th>
+                  <th width="15%">Status</th>
+                  <th width="30%">Agent Email</th>
+                  <th width="30%">Created On</th>
+                </tr>
+                {% endif %}
+              </thead>
+              <tbody>
+                {% if per_page %}
+                {% paginate per_page building_obj_list %}
+                {% else%}
+                {% paginate 10 building_obj_list %}
+                {% endif %}
+                {% for building in building_obj_list %}
+                <tr style="text-align:center;">
+                  <td>
+                    {{building.id}}
+                  </td>
+                  <td>
+                    {% if building.zumper_id%}
+                    {{building.zumper_id}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if building.building_status %}
+                    {{building.building_status}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if building.agent_email %}
+                    {{building.agnet_email}}
+                    {% else %}
+                    None
+                    {% endif %}
+                  </td>
+                  <td class="actions">
+                    <a href="{% url 'buildings:view_building' building.id %}" class="btn btn-info view" title="View" ><i
+                        class="fas fa-eye"></i></a>
+                    <a href="{% url 'buildings:edit_building' building.id%}" class="btn btn-success edit" title="Edit"><i
+                        class="fas fa-pencil-alt"></i></a>
+                    {% if request.user == building.created_by or request.user.role == "ADMIN" or request.user.is_superuser %}
+                    <a href="{% url 'buildings:remove_building' building.id %}"
+                      class="btn btn-danger delete remove_account" title="Delete" ><i class="fas fa-trash-alt"></i></a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor%}
+              </tbody>
+            </table>
+          </div>
+          {%ifequal building_obj_list|length 0 %}
+          <h6 class="text-center">No building Records Found</h6>
+          {%endifequal%}
+          <div class="marl row text-center">
+            {% show_pages %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <br clear="all">
+  </div>
+  <!-- filter_row ends here -->
+</div>
+<!-- main_container ends here -->
+
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+</script>
+{% endblock js_block %}

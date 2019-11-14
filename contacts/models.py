@@ -13,7 +13,7 @@ class Contact(models.Model):
   email = models.EmailField(unique=True)
   phone = PhoneNumberField(null=True, unique=True)
   address = models.ForeignKey(
-    Address, related_name='adress_contacts',
+    Address, related_name='address_contacts',
     on_delete=models.CASCADE, blank=True, null=True)
   description = models.TextField(blank=True, null=True)
   assigned_to = models.ManyToManyField(

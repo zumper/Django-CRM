@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         ('account', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
                                       related_name='lead_account_contacts', to='accounts.Account')),
         ('address', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
-                                      related_name='adress_contacts', to='common.Address')),
+                                      related_name='address_contacts', to='common.Address')),
         ('assigned_to', models.ManyToManyField(related_name='contact_assigned_users', to=settings.AUTH_USER_MODEL)),
         ('created_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='contact_created_by',
                                          to=settings.AUTH_USER_MODEL)),

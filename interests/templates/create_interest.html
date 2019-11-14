@@ -6,7 +6,7 @@
 {% endblock %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'interests:list' %}">Contacts</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'interests:list' %}">Interests</a></li>
     <li class="breadcrumb-item active">{% if interest_obj %}Edit{% else %}Create{% endif %}</li>
   </ol>
 </nav>
@@ -26,13 +26,18 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="filter_col col-md-6">
-                      <label for="exampleInputEmail1" class="required">Building</label>
+                      <label for="id_building" class="related-lookup">
+                          Building
+                      </label>
                       {{ interest_form.building }}
                       <span class="error">{{ interest_form.building.errors }}</span>
                     </div>
                     <div class="filter_col col-md-6">
-                      <label for="exampleInputEmail1" class="required">Listing</label>
+                      <label for="id_listing" class="related-lookup">
+                          Listing
+                      </label>
                       {{ interest_form.listing }}
+                      <span class="error">{{ interest_form.listing.errors }}</span>
                     </div>
                   </div>
                 </div>
@@ -45,33 +50,37 @@
               </div>
               <div class="filter_col col-md-12">
                 <div class="form-group ">
-                  <label for="exampleInputEmail1" class="required">Agent Email</label>
-                  {{ interest_form.agent_email }}
+                  <label for="exampleInputEmail1">Email</label>
+                  {{ interest_form.email }}
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="filter_col col-md-12">
                 <div class="form-group">
-                  <label for="exampleInputEmail1" class="required">Tracking ID</label>
+                  <label for="exampleInputEmail1">Tracking ID</label>
                   {{ interest_form.tracking_id }}
                 </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1" class="required">Opportunity</label>
-                    {{ interest_form.opportunity }}
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1" class="required">Lead</label>
-                    {{ interest_form.lead }}
-                  </div>
-                  <div class="form-group">
-                   <label for="exampleInputEmail1" class="required">Min Price</label>
-                    {{ interest_form.min_price }}
-                  </div>
-                   <div class="form-group">
-                   <label for="exampleInputEmail1" class="required">Max Price</label>
-                    {{ interest_form.max_price }}
-                  </div>
+                <div class="id_lead">
+                  <label for="exampleInputEmail1" class="related-lookup">Lead</label>
+                  {{ interest_form.lead }}
+                </div>
+                <div class="id_contact">
+                  <label for="exampleInputEmail1" class="related-lookup">Contact</label>
+                  {{ interest_form.contact }}
+                </div>
+                <div class="id_opportunity">
+                  <label for="exampleInputEmail1" class="related-lookup">Opportunity</label>
+                  {{ interest_form.opportunity }}
+                </div>
+                <div class="form-group">
+                 <label for="exampleInputEmail1" class="required">Min Price</label>
+                  {{ interest_form.min_price }}
+                </div>
+                 <div class="form-group">
+                 <label for="exampleInputEmail1">Max Price</label>
+                  {{ interest_form.max_price }}
+                </div>
                 </div>
                 <br>
             </div>
@@ -80,30 +89,66 @@
             <div class="col-md-12">
               <div class="row marl buttons_row text-center form_btn_row">
                 <button class="btn btn-default save" type="submit">Save</button>
-                <a class="btn btn-default clear"
-                  id="create_contact_cancel">Cancel</a>
+                {% if not interest_obj %}
+                <button class="btn btn-success save savenew" type="submit">Save & New</button>
+                {% endif %}
+                <a href="{% url 'interests:list' %}" class="btn btn-default clear"
+                  id="create_interest_cancel">Cancel</a>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>]
     </div>
   </div>
 </form>
 {% endblock %}
-{% block js_block %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
 <script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $('#id_building').select2();
+    $('#id_contact').select2();
+    $('#id_lead').select2();
+    $('#id_listing').select2();
+    $('#id_opportunity').select2();
+    $('#id_teams').select2();
+    $('#_id_assigned_to').select2({ disabled: 'readonly' });
+
+  });
+
   $(".savenew").on('click', function (e) {
     e.preventDefault()
     $("#save_new_form").val('true')
     $('#add_form').submit()
   });
-  $(document).ready(function () {
-    $('.assigned_users').select2();
-    $('#id_teams').select2();
-    $('#_id_assigned_to').select2({ disabled: 'readonly' });
 
+  $('form#formid').ajaxForm({
+    type: 'POST',
+    dataType: 'json',
+    url: ".",
+    data: $('#formid').serialize(),
+    success: function (data) {
+      if (data.error) {
+        $('.error').html('')
+        for (var key in data.errors) {
+          $('#id__' + key).html("<p>" + data.errors[key][0] + "</p>");
+        };
+        $('#submit_btn').removeAttr('disabled')
+      }
+      else {
+        window.location = data.success_url;
+      }
+    }
+  });
+
+  $('#multiple').change(function () {
+    var $value = $('option:selected', this).attr('type');
+    console.log($value);
   });
 
 </script>

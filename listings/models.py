@@ -20,7 +20,7 @@ class Listing(models.Model):
   account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='listings', null=True)
   address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name='listings', null=True)
   building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name='listings', null=True)
-  deals = models.ForeignKey(Deal, on_delete=models.SET_NULL, related_name='listings', null=True)
+  deal = models.ForeignKey(Deal, on_delete=models.SET_NULL, related_name='listings', null=True)
   teams = models.ManyToManyField(Teams, related_name='listings')
 
   created_on = models.DateTimeField(auto_now_add=True)
